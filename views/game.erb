@@ -1,0 +1,42 @@
+<h1>Blackjack</h1>
+
+<p>Welcome <%= session[:player_name] %>.</p>
+
+<div class="well">
+  <h4>Dealer's cards:</h4>
+  <% session[:dealer_cards].each do |card| %>
+    <%= card_image(card) %>
+  <% end %>
+  
+  <% if @show_dealer_hit_button %>
+    <p>
+      <h5>Dealer has <%= calculate_total(session[:dealer_cards])%> and will hit.</h5>
+      <form action='/game/dealer/hit' method='post'>
+        <input type='submit' class='btn btn-primary' value="Click for next dealer card" />
+      </form>
+    </p>
+  <% end %>
+</div>
+
+<br />
+
+<div class="well">
+  <h4>Player's cards:</h4>
+  <% session[:player_cards].each do |card| %>
+    <%= card_image(card) %>
+  <% end %>
+</div>
+
+<p>
+  What would <%= session[:player_name] %> like to do?
+  <%= session[:player_name] %> has <%= calculate_total(session[:player_cards]) %>
+  
+  <% if @show_hit_or_stay_buttons %>
+    <form id="hit_form" action="/game/player/hit" method='post'>
+      <input type="submit" class="btn btn-success" value="Hit" />
+    </form>
+    <form id="stay_form" action="/game/player/stay" method="post">
+      <input type="submit" class="btn btn-warning" value="Stay" />
+    </form>
+  <% end %>
+</p>
