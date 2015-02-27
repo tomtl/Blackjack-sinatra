@@ -2,10 +2,22 @@
 
 <p>Welcome <%= session[:player_name] %>.</p>
 
+<% if @play_again %>
+  <p>
+    <strong>Play again?</strong>
+    <a href="/game" class="btn btn-primary">Yes</a>
+    <a href="/game_over" class="btn">No</a>
+  </p>
+<% end %>
+
 <div class="well">
   <h4>Dealer's cards:</h4>
-  <% session[:dealer_cards].each do |card| %>
-    <%= card_image(card) %>
+  <% session[:dealer_cards].each_with_index do |card, index| %>
+    <% if session[:turn] != "dealer" && index == 0 %>
+      <img src="/images/cards/cover.jpg">
+    <% else %>
+      <%= card_image(card) %>
+    <% end %>
   <% end %>
   
   <% if @show_dealer_hit_button %>
@@ -28,7 +40,6 @@
 </div>
 
 <p>
-  What would <%= session[:player_name] %> like to do?
   <%= session[:player_name] %> has <%= calculate_total(session[:player_cards]) %>
   
   <% if @show_hit_or_stay_buttons %>
@@ -38,5 +49,5 @@
     <form id="stay_form" action="/game/player/stay" method="post">
       <input type="submit" class="btn btn-warning" value="Stay" />
     </form>
-  <% end %>
+<% end %>
 </p>
