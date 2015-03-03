@@ -1,3 +1,9 @@
 <h3>Thanks for playing!</h3>
 
+<% if session[:player_pot] > STARTING_POT %>
+  <p>You finished $<%= session[:player_pot].to_i - STARTING_POT %> up!</p>
+<% else %>
+  <p>You lost $<%= STARTING_POT - session[:player_pot] %>. Lucky it's pretend money!</p>
+<% end %>
+
 <a href='/new_player'>Start over</a>

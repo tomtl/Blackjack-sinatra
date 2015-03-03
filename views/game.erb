@@ -7,7 +7,11 @@
   <% end %>
   <h1>Blackjack</h1>
 
-  <p>Welcome <%= session[:player_name] %>.</p>
+  <p>Welcome <%= session[:player_name] %>. </p>
+  
+  <% unless @play_again %>
+    <p><%= session[:player_name] %> has $<%= session[:player_pot] %> and bet $<%= session[:player_bet] %>.</p>
+  <% end %>
 
   <% if @play_again %>
     <p>
@@ -44,19 +48,17 @@
     <% session[:player_cards].each do |card| %>
       <%= card_image(card) %>
     <% end %>
-    <p><%= session[:player_name] %> has $<%= session[:player_pot] %> and bet $<%= session[:player_bet] %>.</p>
+    <p><%= session[:player_name] %> has <%= calculate_total(session[:player_cards]) %>.</p>
   </div>
 
   <p>
-    <%= session[:player_name] %> has <%= calculate_total(session[:player_cards]) %>
-  
-    <% if @show_hit_or_stay_buttons %>
-      <form id="hit_form" action="/game/player/hit" method='post'>
-        <input type="submit" class="btn btn-success" value="Hit" />
-      </form>
-      <form id="stay_form" action="/game/player/stay" method="post">
-        <input type="submit" class="btn btn-warning" value="Stay" />
-      </form>
+  <% if @show_hit_or_stay_buttons %>
+    <form id="hit_form" action="/game/player/hit" method='post'>
+      <input type="submit" class="btn btn-success" value="Hit" />
+    </form>
+    <form id="stay_form" action="/game/player/stay" method="post">
+      <input type="submit" class="btn btn-warning" value="Stay" />
+    </form>
   <% end %>
   </p>
 </div>

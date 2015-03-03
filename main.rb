@@ -50,15 +50,19 @@ helpers do
   end
   
   def winner!(msg)
-    @winner = "<strong>#{session[:player_name]} wins!</strong> #{msg}"
     session[:player_pot] += session[:player_bet]
+    @winner = "<strong>#{session[:player_name]} wins!</strong> #{msg}
+      #{session[:player_name]} won $#{session[:player_bet]} and now has 
+      $#{session[:player_pot]}."
     @show_hit_or_stay_buttons = false
     @play_again = true
   end
   
   def loser!(msg)
-    @loser = "<strong>#{session[:player_name]} loses.</strong> #{msg}"
     session[:player_pot] -= session[:player_bet]
+    @loser = "<strong>#{session[:player_name]} loses.</strong> #{msg}
+      #{session[:player_name]} lost $#{session[:player_bet]} and now has 
+      $#{session[:player_pot]}."
     @show_hit_or_stay_buttons = false
     @play_again = true
   end
@@ -98,7 +102,11 @@ post '/new_player' do
 end
 
 get '/bet' do
-  erb :bet
+  if session[:player_pot] <= 0
+    redirect '/game_over'
+  else
+    erb :bet
+  end
 end
 
 post '/bet' do
