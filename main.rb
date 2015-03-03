@@ -9,10 +9,10 @@ STARTING_POT = 1000
 
 helpers do
   def calculate_total(cards) # cards is [ ['H', '9'], ['C', 'K'] ... ]
-    arr = cards.map{ |element| element[1] }
+    ranks = cards.map{ |element| element[1] }
     
     total = 0
-    arr.each do |rank|
+    ranks.each do |rank|
       if rank == "A"
         total += 11
       else
@@ -21,7 +21,7 @@ helpers do
     end
     
     # Correct for aces
-    arr.select{ |element| element == "A"}.count.times do
+    ranks.select{ |element| element == "A"}.count.times do
       break if total <= BLACKJACK_AMOUNT
       total -= 10
     end
@@ -55,6 +55,7 @@ helpers do
       #{session[:player_name]} won $#{session[:player_bet]} and now has 
       $#{session[:player_pot]}."
     @show_hit_or_stay_buttons = false
+    session[:turn] = "dealer"
     @play_again = true
   end
   
@@ -64,6 +65,7 @@ helpers do
       #{session[:player_name]} lost $#{session[:player_bet]} and now has 
       $#{session[:player_pot]}."
     @show_hit_or_stay_buttons = false
+    session[:turn] = "dealer"
     @play_again = true
   end
   
@@ -137,6 +139,12 @@ get '/game' do
   session[:player_cards] << session[:deck].pop
   session[:dealer_cards] << session[:deck].pop
   session[:player_cards] << session[:deck].pop
+  
+  if calculate_total(session[:player_cards]) == BLACKJACK_AMOUNT
+    winner!("#{session[:player_name]} hit blackjack.")
+  elsif calculate_total(session[:dealer_cards]) == BLACKJACK_AMOUNT
+    loser!("Dealer hit blackjack.")
+  end
   
   erb :game
 end
